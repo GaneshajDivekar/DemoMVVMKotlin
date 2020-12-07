@@ -1,15 +1,18 @@
 package demo.mvvm.repository
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import demo.mvvm.db.PokeDao
+import demo.mvvm.model.dao.Pokemon
 import demo.mvvm.network.APIService
 import fieldtrak.kotlin.model.Example
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class MainRepository  @Inject constructor(private val apiHelper: APIService) {
-    var weatherResponseLiveData = MutableLiveData<Example>()
-
+class MainRepository  @Inject constructor(private val apiHelper: APIService
+                                          ,private val pokeDao: PokeDao) {
+    var example = MutableLiveData<Example>()
     fun getResponse(
         city: String,
         s: String,
@@ -27,14 +30,22 @@ class MainRepository  @Inject constructor(private val apiHelper: APIService) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()).subscribe(
                 { weather ->
-                    weatherResponseLiveData.postValue(weather)
+                    example.postValue(weather)
                 },
                 { error ->
-                    weatherResponseLiveData.postValue(null)
+                    example.postValue(null)
                 }
             )
-    return weatherResponseLiveData
-
-
+    return example
     }
+
+    fun insertData(pokemon: Pokemon) {
+        pokeDao.insertData(pokemon)
+    }
+
+    fun getPokeman(): LiveData<List<Pokemon>> {
+        return  pokeDao.getAll()
+    }
+
+
 }

@@ -1,9 +1,11 @@
 package demo.mvvm.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mindorks.framework.mvvm.utils.NetworkHelper
+import demo.mvvm.model.dao.Pokemon
 import demo.mvvm.repository.MainRepository
 import fieldtrak.kotlin.model.Example
 
@@ -26,5 +28,14 @@ class MainViewModel  @ViewModelInject constructor(
     ): MutableLiveData<Example> {
         return mainRepository.getResponse(city,s,s1,s2,s3,s4,s5,s6,s7,s8,s9)
     }
+
+    fun insertData(pokemon: Pokemon) {
+        mainRepository.insertData(pokemon)
+    }
+
+    fun getPokemon(): LiveData<List<Pokemon>> {
+        return mainRepository.getPokeman()
+    }
+
 
 }
